@@ -64,7 +64,6 @@ def path_check():
         global good_paths
         good_paths = True
 
-# def version_present():
 
 # def req_docs_create():
 #     try:
@@ -110,3 +109,9 @@ if __name__ == "__main__":
     path_check()
     if good_paths:
         print("Good to go.")
+    print(os.path.isfile(".\\_version.py"))
+
+# as it sits meow, this would require that the '_version.py' be located in the
+# source directory. Should it be left this way? Or, should a condition be made
+# to check if having the version file exist simply within a module and not a
+# package necessarily?

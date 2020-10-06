@@ -16,6 +16,7 @@ Notes:
 # https://stackoverflow.com/questions/5137497/
 # https://stackoverflow.com/questions/12332975/
 # https://stackoverflow.com/questions/54462479/
+# https://stackoverflow.com/questions/10507230/
 
 # Boolean
 # https://www.w3schools.com/python/python_booleans.asp
@@ -25,10 +26,10 @@ Notes:
 import os
 import subprocess
 import sys
-from _version import __version__
+# from _version import __version__
 
 # The packages utilized for Sphinx documentation
-# Parent installs: Sphinx, m2r2; the rest install from Sphinx
+# Parent installs: Sphinx==3.2.1, m2r2==0.2.5; the rest install from Sphinx
 sphinx = ['alabaster', 'Babel', 'certifi', 'chardet', 'colorama', 'docutils',
           'idna', 'imagesize', 'Jinja2', 'm2r2', 'MarkupSafe', 'mistune',
           'packaging', 'Pygments', 'pyparsing', 'pytz', 'requests', 'six',
@@ -37,45 +38,63 @@ sphinx = ['alabaster', 'Babel', 'certifi', 'chardet', 'colorama', 'docutils',
           'sphinxcontrib-jsmath', 'sphinxcontrib-qthelp',
           'sphinxcontrib-serializinghtml', 'urllib3']
 
-this_dir = os.getcwd()
-reqs_docs_file = "docs/subprotest_docs.txt"
-reqs_file = "docs/subprotest.txt"
-docs_present = False
+root_dir = os.getcwd()
+project_name = ""
+req_docs_file = "docs/subprotest_docs.txt"
+req_file = "docs/subprotest.txt"
+good_paths = False
 
 
 def get_project_name():
-    dir_split = this_dir.split("\\")
-    # print(dir_split)
-    # source code directory should be the same as project name
+    dir_split = root_dir.split("\\")
+    global project_name
     project_name = dir_split[-1]
-    print(project_name)
 
 
-def docs_detect():
-    docs_present = os.path.isdir(this_dir + "\\docs")
-
+def path_check():
+    docs_present = os.path.isdir(root_dir + "\\docs")
+    ver_present = os.path.isfile(root_dir + "\\_version.py")
+    if not docs_present:
+        print(root_dir + "\\docs not found.\n" +
+              "Ensure this directory is present and rerun script.")
+    elif not ver_present:
+        print(root_dir + "\\" + project_name + "\\_version.py not found.\n" +
+              "Ensure version file is present and rerun script.")
+    else:
+        global good_paths
+        good_paths = True
 
 # def version_present():
 
+# def req_docs_create():
+#     try:
+#         subprocess.run([sys.executable, "-m", "pip", "freeze", ">",
+#                         reqs_docs_file], shell=True)
+#     except FileNotFoundError:
+#         print("Could not create requirements file.\n" +
+#               "Ensure docs directory is present in root.")
 
-subprocess.run([sys.executable, "-m", "pip", "freeze", ">", reqs_docs_file],
-               shell=True)
+# def reqs_docs_create():
+#     subprocess.run([sys.executable, "-m", "pip", "freeze", ">",
+#                     reqs_docs_file], shell=True)
+#     print("reqs_docs created")
 
-with open(reqs_docs_file, "r") as rdf:
-    contents = rdf.readlines()
+
+
+# with open(reqs_docs_file, "r") as rdf:
+#     contents = rdf.readlines()
 
 # contents.insert(0, "# " + project_name + " - v" + __version__ + "\n")
 
-print(contents)
+# print(contents)
 
-with open(reqs_docs_file, "w") as rdf:
-    contents = "".join(contents)
-    rdf.write(contents)
+# with open(reqs_docs_file, "w") as rdf:
+#     contents = "".join(contents)
+#     rdf.write(contents)
 
 # list = ["a", "#", "b"]
 # list.sort()
 # print(list)
-
 
 
 # # # is requirements for docs
@@ -84,9 +103,10 @@ with open(reqs_docs_file, "w") as rdf:
 #
 
 if __name__ == "__main__":
+    print("Project root: " + root_dir + "\n")
+    # subprocess.run([sys.executable, "-m", "pip", "freeze", ">",
+    #                 req_docs_file], shell=True)
     get_project_name()
-    docs_detect()
-    if docs_present:
-        print("Docs present")
-    else:
-        print("You fucked up")
+    path_check()
+    if good_paths:
+        print("Good to go.")

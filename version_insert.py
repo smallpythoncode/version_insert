@@ -1,5 +1,6 @@
 """"
-A script to generate source and Sphinx requirements files with version comments
+A script to generate separate source-only and source and Sphinx requirements
+files with version comments.
 
 1. Generates 'docs/requirements_docs.txt' to document sphinx requirements
 2. Inserts the version of the project as a comment to the top  line of
@@ -46,6 +47,7 @@ good_paths = False
 
 
 def get_project_name():
+    """Returns the name of the project, i.e., the intended root directory name."""
     dir_split = root_dir.split("\\")
     global project_name
     project_name = dir_split[-1]
@@ -54,26 +56,24 @@ def get_project_name():
 def path_check():
     docs_present = os.path.isdir(root_dir + "\\docs")
     is_package = os.path.isdir(root_dir + "\\" + project_name)
+    package_ver_path = root_dir + "\\" + project_name + "\\_version.py"
+    module_ver_path = root_dir + "\\_version.py"
 
     if is_package:
-        ver_present = os.path.isfile(root_dir + "\\" + project_name +
-                                     "\\_version.py")
+        ver_present = os.path.isfile(package_ver_path)
     else:
-        ver_present = os.path.isfile(root_dir + "\\_version.py")
+        ver_present = os.path.isfile(module_ver_path)
 
     if not docs_present:
         print(root_dir + "\\docs not found.\n" +
               "Ensure this directory is present and rerun script.")
     elif not ver_present:
         if is_package:
-            print(root_dir + "\\" + project_name + "\\_version.py not "
-                                                   "found.\n")
-
-
-        print("_version.py not found in project path.\n" +
-              "Insert this file in root for a module.\n" +
-              "Insert this file in the source directory for a package.\n"
-              "Ensure version file is present and rerun script.")
+            print(package_ver_path + " not found.\n"
+                  "Ensure version file is present and rerun script.")
+        else:
+            print(module_ver_path + " not found.\n"
+                  "Ensure version file is present and rerun script.")
     else:
         global good_paths
         good_paths = True

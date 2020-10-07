@@ -53,12 +53,26 @@ def get_project_name():
 
 def path_check():
     docs_present = os.path.isdir(root_dir + "\\docs")
-    ver_present = os.path.isfile(root_dir + "\\_version.py")
+    is_package = os.path.isdir(root_dir + "\\" + project_name)
+
+    if is_package:
+        ver_present = os.path.isfile(root_dir + "\\" + project_name +
+                                     "\\_version.py")
+    else:
+        ver_present = os.path.isfile(root_dir + "\\_version.py")
+
     if not docs_present:
         print(root_dir + "\\docs not found.\n" +
               "Ensure this directory is present and rerun script.")
     elif not ver_present:
-        print(root_dir + "\\" + project_name + "\\_version.py not found.\n" +
+        if is_package:
+            print(root_dir + "\\" + project_name + "\\_version.py not "
+                                                   "found.\n")
+
+
+        print("_version.py not found in project path.\n" +
+              "Insert this file in root for a module.\n" +
+              "Insert this file in the source directory for a package.\n"
               "Ensure version file is present and rerun script.")
     else:
         global good_paths
@@ -109,7 +123,6 @@ if __name__ == "__main__":
     path_check()
     if good_paths:
         print("Good to go.")
-    print(os.path.isfile(".\\_version.py"))
 
 # as it sits meow, this would require that the '_version.py' be located in the
 # source directory. Should it be left this way? Or, should a condition be made

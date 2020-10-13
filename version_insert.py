@@ -27,7 +27,7 @@ Notes:
 import os
 import subprocess
 import sys
-# from _version import __version__
+from docs._version import __version__
 
 # The packages utilized for Sphinx documentation
 # Parent installs: Sphinx==3.2.1, m2r2==0.2.5; the rest install from Sphinx
@@ -41,13 +41,15 @@ sphinx = ['alabaster', 'Babel', 'certifi', 'chardet', 'colorama', 'docutils',
 
 root_dir = os.getcwd()
 project_name = ""
-req_docs_file = "docs/subprotest_docs.txt"
-req_file = "docs/subprotest.txt"
+is_package = False
 good_paths = False
+
+# req_docs_file = "docs/subprotest_docs.txt"
+# req_file = "docs/subprotest.txt"
 
 
 def get_project_name():
-    """Returns the name of the project, i.e., the intended root directory name."""
+    """Returns the name of the project"""
     dir_split = root_dir.split("\\")
     global project_name
     project_name = dir_split[-1]
@@ -55,6 +57,7 @@ def get_project_name():
 
 def path_check():
     docs_present = os.path.isdir(root_dir + "\\docs")
+    global is_package
     is_package = os.path.isdir(root_dir + "\\" + project_name)
     package_ver_path = root_dir + "\\" + project_name + "\\_version.py"
     module_ver_path = root_dir + "\\_version.py"
@@ -123,6 +126,7 @@ if __name__ == "__main__":
     path_check()
     if good_paths:
         print("Good to go.")
+        print(__version__)
 
 # as it sits meow, this would require that the '_version.py' be located in the
 # source directory. Should it be left this way? Or, should a condition be made

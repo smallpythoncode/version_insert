@@ -18,17 +18,21 @@ Notes:
 # https://stackoverflow.com/questions/12332975/
 # https://stackoverflow.com/questions/54462479/
 # https://stackoverflow.com/questions/10507230/
-
+# variable import
+# https://stackoverflow.com/questions/6677424/
 # Boolean
 # https://www.w3schools.com/python/python_booleans.asp
 # https://stackoverflow.com/questions/5119709/
 
 
 import os
+from importlib import import_module
 import subprocess
 import sys
-# from docs._version import __version__
-import v
+# from ver import __version__
+
+
+
 
 # The packages utilized for Sphinx documentation
 # Parent installs: Sphinx==3.2.1, m2r2==0.2.5; the rest install from Sphinx
@@ -42,45 +46,53 @@ sphinx = ['alabaster', 'Babel', 'certifi', 'chardet', 'colorama', 'docutils',
 
 root_dir = os.getcwd()
 project_name = ""
-is_package = False
+ver_path = root_dir + "_version.py"
 good_paths = False
 
 # req_docs_file = "docs/subprotest_docs.txt"
 # req_file = "docs/subprotest.txt"
 
 
-def get_project_name():
-    """Returns the name of the project"""
-    dir_split = root_dir.split("\\")
-    global project_name
-    project_name = dir_split[-1]
+# def get_project_name():
+#     """Returns the name of the project"""
+#     dir_split = root_dir.split("\\")
+#     global project_name
+#     project_name = dir_split[-1]
 
 
 def path_check():
-    docs_present = os.path.isdir(root_dir + "\\docs")
-    global is_package
+    def get_project_name():
+        dir_split = root_dir.split("\\")
+        return dir_split[-1]
+    global project_name
+    project_name = get_project_name()
+    assert os.path.isdir(root_dir + "\\docs"), \
+        "Ensure " + root_dir + "\\docs is present."
     is_package = os.path.isdir(root_dir + "\\" + project_name)
-    package_ver_path = root_dir + "\\" + project_name + "\\_version.py"
-    module_ver_path = root_dir + "\\_version.py"
-
+    global ver_path
+    ver_path = "_versio.py"
+    # global is_package
+    is_package = os.path.isdir(root_dir + "\\" + project_name)
+    # package_ver_path = root_dir + "\\" + project_name + "\\_version.py"
+    # module_ver_path = root_dir + "\\_version.py"
+    ver_mod = ""
+    # global ver
     if is_package:
-        ver_present = os.path.isfile(package_ver_path)
-    else:
-        ver_present = os.path.isfile(module_ver_path)
+        ver = import_module(__version__, fromlist=(project_name + "._version"))
+    # else:
+    #     ver_present = "bumpy"
+    # print()
 
-    if not docs_present:
-        print(root_dir + "\\docs not found.\n" +
-              "Ensure this directory is present and rerun script.")
-    elif not ver_present:
-        if is_package:
-            print(package_ver_path + " not found.\n"
-                  "Ensure version file is present and rerun script.")
-        else:
-            print(module_ver_path + " not found.\n"
-                  "Ensure version file is present and rerun script.")
-    else:
-        global good_paths
-        good_paths = True
+    # elif not ver_present:
+    #     if is_package:
+    #         print(package_ver_path + " not found.\n"
+    #               "Ensure version file is present and rerun script.")
+    #     else:
+    #         print(module_ver_path + " not found.\n"
+    #               "Ensure version file is present and rerun script.")
+    # else:
+    #     global good_paths
+    #     good_paths = True
 
 
 def path_check_test():
@@ -136,8 +148,14 @@ def path_check_test():
 
 
 if __name__ == "__main__":
-    get_project_name()
-    path_check_test()
+    path_check()
+    assert (len(project_name) > 0), \
+        "Project name not defined, run path_check()"
+    print("Project name: " + project_name)
+    path_check()
+    print("Project name: " + project_name)
+    # print(ver.__version__)
+
 
 
 # 1st week october

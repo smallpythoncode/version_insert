@@ -45,9 +45,9 @@ sphinx = ['alabaster', 'Babel', 'certifi', 'chardet', 'colorama', 'docutils',
           'sphinxcontrib-jsmath', 'sphinxcontrib-qthelp',
           'sphinxcontrib-serializinghtml', 'urllib3']
 
-root_dir = os.getcwd()
+root = os.getcwd()
 project_name = ""
-ver_path = root_dir + "_version.py"
+ver_path = root + "_version.py"
 good_paths = False
 ver = ""
 
@@ -62,16 +62,25 @@ ver = ""
 #     project_name = dir_split[-1]
 
 
+# TODO - figure out nomenclature (cwd vs root)
+def get_project_name(cwd):
+    project_name = cwd.split("\\")
+    return project_name[-1]
+
+
+def docs_check():
+    """Creates the docs directory if it doesn't already exist"""
+
+
 def path_check():
-    def get_project_name():
-        dir_split = root_dir.split("\\")
-        return dir_split[-1]
     global project_name
-    project_name = get_project_name()
-    assert os.path.isdir(root_dir + "\\docs"), \
-        "Ensure " + root_dir + "\\docs is present."
+    project_name = get_project_name(root)
+    assert os.path.isdir(root + "\\docs"), \
+        "Ensure " + root + "\\docs is present."
     # global is_package
     is_package = os.path.isdir(root_dir + "\\" + project_name)
+    # TODO - exception for no __init__ in package
+    # TODO - exception for ._version.py not present
     try:
         global ver
         if is_package:

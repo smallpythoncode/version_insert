@@ -64,8 +64,15 @@ ver = ""
 
 # TODO - figure out nomenclature (cwd vs root)
 def get_project_name(cwd):
-    project_name = cwd.split("\\")
-    return project_name[-1]
+    """
+    Retrieve project name from last level of directory input.
+
+    :param str cwd: current working directory
+    :return: project name
+    :rtype: str
+    """
+    name = cwd.split("\\")
+    return name[-1]
 
 
 def docs_check():

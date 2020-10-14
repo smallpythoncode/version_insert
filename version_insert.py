@@ -28,7 +28,7 @@ import os
 import subprocess
 import sys
 # from docs._version import __version__
-import v
+
 
 # The packages utilized for Sphinx documentation
 # Parent installs: Sphinx==3.2.1, m2r2==0.2.5; the rest install from Sphinx

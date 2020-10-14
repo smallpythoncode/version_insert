@@ -26,10 +26,11 @@ Notes:
 
 
 import os
-from importlib import import_module
-import subprocess
-import sys
+# from importlib import import_module
+# import subprocess
+# import sys
 # from ver import __version__
+# from version_insert._version import __version__
 
 
 
@@ -48,6 +49,7 @@ root_dir = os.getcwd()
 project_name = ""
 ver_path = root_dir + "_version.py"
 good_paths = False
+ver = ""
 
 # req_docs_file = "docs/subprotest_docs.txt"
 # req_file = "docs/subprotest.txt"
@@ -68,17 +70,18 @@ def path_check():
     project_name = get_project_name()
     assert os.path.isdir(root_dir + "\\docs"), \
         "Ensure " + root_dir + "\\docs is present."
-    is_package = os.path.isdir(root_dir + "\\" + project_name)
-    global ver_path
-    ver_path = "_versio.py"
     # global is_package
     is_package = os.path.isdir(root_dir + "\\" + project_name)
-    # package_ver_path = root_dir + "\\" + project_name + "\\_version.py"
-    # module_ver_path = root_dir + "\\_version.py"
-    ver_mod = ""
-    # global ver
-    if is_package:
-        ver = import_module(__version__, fromlist=(project_name + "._version"))
+    try:
+        global ver
+        if is_package:
+            ver = getattr(__import__(project_name + "._version",
+                                 fromlist="__version__"), "__version__")
+        else:
+            ver = getattr(__import__("_version", fromlist="__version__"),
+                      "__version__")
+    except ModuleNotFoundError:
+        print("")
     # else:
     #     ver_present = "bumpy"
     # print()
@@ -151,10 +154,10 @@ if __name__ == "__main__":
     path_check()
     assert (len(project_name) > 0), \
         "Project name not defined, run path_check()"
-    print("Project name: " + project_name)
-    path_check()
-    print("Project name: " + project_name)
-    # print(ver.__version__)
+    # print("Project name: " + project_name)
+    # path_check()
+    # print("Project name: " + project_name)
+    # print(ver)
 
 
 

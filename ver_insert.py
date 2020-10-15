@@ -1,9 +1,14 @@
 """"
-A script to generate separate source-only and source and Sphinx requirements
+A script to generate separate source-only and source plus Sphinx requirements
 files with version comments.
 
-1. Generates 'docs/requirements_docs.txt' to document sphinx requirements
-2. Inserts the version of the project as a comment to the top  line of
+1.  Retrieves the project name.
+2.  Verifies that the docs directory exists and creates one if it does not
+
+
+x. Generates 'docs/requirements_docs.txt' to document sphinx
+requirements
+x. Inserts the version of the project as a comment to the top  line of
 'requirements_docs.txt' located in the project docs directory.
 
 
@@ -46,56 +51,62 @@ sphinx = ['alabaster', 'Babel', 'certifi', 'chardet', 'colorama', 'docutils',
           'sphinxcontrib-serializinghtml', 'urllib3']
 
 root = os.getcwd()
+docs = root + "\\docs"
 project_name = ""
 ver_path = root + "_version.py"
 good_paths = False
-ver = ""
+version = ""
 
 # req_docs_file = "docs/subprotest_docs.txt"
 # req_file = "docs/subprotest.txt"
 
 
-# def get_project_name():
-#     """Returns the name of the project"""
-#     dir_split = root_dir.split("\\")
-#     global project_name
-#     project_name = dir_split[-1]
+def get_project_name(cwd=os.getcwd()):
+    """Returns project name from last level of current working directory.
 
-
-# TODO - figure out nomenclature (cwd vs root)
-def get_project_name(cwd):
-    """
-    Retrieve project name from last level of directory input.
-
-    :param str cwd: current working directory
+    :param cwd: current working directory
+    :type cwd: str
     :return: project name
     :rtype: str
     """
+    import os
     name = cwd.split("\\")
     return name[-1]
 
 
-def docs_check():
-    """Creates the docs directory if it doesn't already exist"""
+def docs_ensure(docs_dir):
+    """Checks that the project's docs directory exists and creates it if it
+    doesn't.
+
+    :param docs_dir: project's docs directory
+    :type docs_dir: str
+    """
+    docs_present = os.path.isdir(docs_dir)
+    if not docs_present:
+        os.mkdir(docs_dir)
 
 
-def path_check():
+def ver_check():
+    """Checks access to project version module
+
+    :return:
+    """
     global project_name
     project_name = get_project_name(root)
-    assert os.path.isdir(root + "\\docs"), \
+    assert os.path.isdir(docs), \
         "Ensure " + root + "\\docs is present."
     # global is_package
-    is_package = os.path.isdir(root_dir + "\\" + project_name)
+    is_package = os.path.isdir(root + "\\" + project_name)
     # TODO - exception for no __init__ in package
     # TODO - exception for ._version.py not present
     try:
-        global ver
+        global version
         if is_package:
-            ver = getattr(__import__(project_name + "._version",
-                                 fromlist="__version__"), "__version__")
+            version = getattr(__import__(project_name + "._version",
+                              fromlist="__version__"), "__version__")
         else:
-            ver = getattr(__import__("_version", fromlist="__version__"),
-                      "__version__")
+            version = getattr(__import__("_version", fromlist="__version__"),
+                              "__version__")
     except ModuleNotFoundError:
         print("")
     # else:

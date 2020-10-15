@@ -1,6 +1,6 @@
-with open("some_dir\\weeeeeee.txt", "w") as we:
-    we.write("WEEEEEEEEE")
+def some_string(string):
+    string = string + "string"
+    return string
 
 
-# TODO - write function to check if docs directory exists then create the
-#  directory if it doesn't
+def pr
